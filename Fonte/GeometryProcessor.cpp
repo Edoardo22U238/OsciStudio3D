@@ -6,6 +6,7 @@
 #include <cmath>
 #include <algorithm>
 #include <limits>
+#include "AudioEngine.h"
 
 // ── Rotation matrix (Rz * Ry * Rx) ──────────────────────────
 std::array<float,9> GeometryProcessor::makeRotMat (float rx, float ry, float rz)
