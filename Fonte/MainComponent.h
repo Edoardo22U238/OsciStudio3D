@@ -61,6 +61,7 @@ private:
     juce::TextButton  btnPlay_       { "Play" };
     juce::TextButton  btnSettings_   { "Audio Settings" };
     juce::TextButton  btnExport_     { "Export WAV" };
+std::unique_ptr<juce::FileChooser> fileChooser_;
 
     juce::Label       lblFile_       { {}, "No file loaded" };
     juce::Label       lblStatus_     { {}, "Ready" };
