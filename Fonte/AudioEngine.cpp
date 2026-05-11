@@ -43,7 +43,7 @@ void AudioEngine::fill (const juce::AudioSourceChannelInfo& info) noexcept
     auto* outL = info.buffer->getWritePointer (0, info.startSample);
     auto* outR = info.buffer->getWritePointer (1, info.startSample);
 
-    if (!playing_.load (std::memory_order_relaxed) || n == 0)
+    if (!playing.load (std::memory_order_relaxed) || n == 0)
     {
         std::memset (outL, 0, (size_t)info.numSamples * sizeof (float));
         std::memset (outR, 0, (size_t)info.numSamples * sizeof (float));
