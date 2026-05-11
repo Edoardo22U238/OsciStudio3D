@@ -52,12 +52,12 @@ juce_add_gui_app(OsciStudio3D
 juce_generate_juce_header(OsciStudio3D)
 
 target_sources(OsciStudio3D PRIVATE
-    Source/Main.cpp
-    Source/MainComponent.cpp
-    Source/AudioEngine.cpp
-    Source/GeometryProcessor.cpp
-    Source/ScopeRenderer.cpp
-    Source/WavExporter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Fonte/Main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Fonte/AudioEngine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Fonte/GeometryProcessor.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Fonte/MainComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Fonte/ScopeRenderer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Fonte/WavExporter.cpp
 )
 
 target_compile_definitions(OsciStudio3D PRIVATE
