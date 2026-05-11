@@ -19,6 +19,7 @@ Built with **C++17**, **JUCE**, **Assimp**, **CMake**.
 > JUCE and Assimp are fetched automatically by CMake via `FetchContent`.
 
 ---
+test build
 
 ### Steps
 
