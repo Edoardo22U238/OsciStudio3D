@@ -209,8 +209,16 @@ void MainComponent::buildControlPanel()
         const int W = 270, M = 4, H = 22, BH = 26;
         int y = 6;
 
-        auto row = [&](juce::Component& c, int h=H)
-            { c.setBounds(M, y, W, h); y += h + 2; };
+auto row = [&](juce::Component& c, int h)
+{
+    c.setBounds(M, y, W, h);
+    y += h + 2;
+};
+
+auto rowH = [&](juce::Component& c)
+{
+    row(c, H);
+};
 
         row (btnOpen_, BH); row (btnPlay_, BH);
         row (lblFile_, H); row (lblHz_, 28); row (lblStatus_, H);
@@ -219,29 +227,64 @@ void MainComponent::buildControlPanel()
         auto hdr = [&](const juce::String& s)
             { auto* l = makeLbl(controlsContent_,s,true); l->setBounds(M,y,W,14); y+=16; };
 
-        hdr ("── ROTATION ──────────────────");
-        row (*sldRotX_); row (*sldRotY_); row (*sldRotZ_);
-        row (tglAutoX_,H); row (tglAutoY_,H); row (tglAutoZ_,H);
-        row (*sldRotSpeed_);
-        y+=4;
-        hdr ("── TRANSFORM ─────────────────");
-        row (*sldScale_); row (*sldOffX_); row (*sldOffY_);
-        y+=4;
-        hdr ("── GEOMETRY ──────────────────");
-        row (*sldDetail_); row (*sldSmooth_); row (*sldLPF_);
-        row (*sldTargetHz_);
-        row (tglArtistic_,H);
-        y+=4;
-        hdr ("── AUDIO ─────────────────────");
-        row (*sldGainX_); row (*sldGainY_); row (*sldMaster_);
-        row (*sldPhase_);
-        row (btnSettings_, BH);
-        row (btnExport_, BH);
-        y+=4;
-        hdr ("── RENDER ────────────────────");
-        row (*sldDecay_); row (*sldGlow_); row (*sldBrightness_);
-        row (*sldBeamR_); row (*sldBeamG_); row (*sldBeamB_);
-        row (tglGrid_,H);
+     hdr ("── ROTATION ─────────────────────");
+
+rowH(*sldRotX_); 
+rowH(*sldRotY_); 
+rowH(*sldRotZ_);
+
+row(tglAutoX_, H); 
+row(tglAutoY_, H); 
+row(tglAutoZ_, H);
+
+rowH(*sldRotSpeed_);
+
+y += 4;
+
+hdr ("── TRANSFORM ────────────────────");
+
+rowH(*sldScale_);
+rowH(*sldOffX_);
+rowH(*sldOffY_);
+
+y += 4;
+
+hdr ("── GEOMETRY ─────────────────────");
+
+rowH(*sldDetail_);
+rowH(*sldSmooth_);
+rowH(*sldLPF_);
+
+rowH(*sldTargetHz_);
+
+row(tglArtistic_, H);
+
+y += 4;
+
+hdr ("── AUDIO ────────────────────────");
+
+rowH(*sldGainX_);
+rowH(*sldGainY_);
+rowH(*sldMaster_);
+
+rowH(*sldPhase_);
+
+row(btnSettings_, BH);
+row(btnExport_, BH);
+
+y += 4;
+
+hdr ("── RENDER ───────────────────────");
+
+rowH(*sldDecay_);
+rowH(*sldGlow_);
+rowH(*sldBrightness_);
+
+rowH(*sldBeamR_);
+rowH(*sldBeamG_);
+rowH(*sldBeamB_);
+
+row(tglGrid_, H);  
 
         controlsContent_.setSize (280, y + 10);
     };
