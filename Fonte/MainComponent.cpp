@@ -314,22 +314,44 @@ void MainComponent::sliderValueChanged (juce::Slider* s)
     updateGeoParams();
 }
 
-void MainComponent::buttonClicked (juce::Button* b)
+void MainComponent::buttonClicked(juce::Button* b)
 {
     if (b == &btnOpen_)
     {
-        juce::FileChooser fc ("Open 3D File", {}, "*.stl;*.obj;*.ply;*.glb;*.gltf");
-        if (fc.browseForFileToOpen())
-            loadFile (fc.getResult().getFullPathName());
+        fileChooser_ = std::make_unique<juce::FileChooser>(
+            "Open 3D File",
+            juce::File{},
+            "*.stl;*.obj;*.ply;*.glb;*.gltf");
+
+        auto flags =
+            juce::FileBrowserComponent::openMode |
+            juce::FileBrowserComponent::canSelectFiles;
+
+        fileChooser_->launchAsync(flags,
+            [this](const juce::FileChooser& chooser)
+        {
+            auto file = chooser.getResult();
+
+            if (file.existsAsFile())
+                loadFile(file.getFullPathName());
+        });
     }
     else if (b == &btnPlay_)
     {
         playing_ = !playing_;
-        audioEngine_.playing.store (playing_);
-        btnPlay_.setButtonText (playing_ ? "Stop" : "Play");
+        audioEngine_.playing.store(playing_);
+
+        btnPlay_.setButtonText(
+            playing_ ? "Stop" : "Play");
     }
-    else if (b == &btnSettings_) { showAudioSettings(); }
-    else if (b == &btnExport_)   { exportWav(); }
+    else if (b == &btnSettings_)
+    {
+        showAudioSettings();
+    }
+    else if (b == &btnExport_)
+    {
+        exportWav();
+    }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -398,15 +420,44 @@ void MainComponent::showAudioSettings()
 
 void MainComponent::exportWav()
 {
-    if (lastX_.empty()) return;
-    juce::FileChooser fc ("Export WAV", {}, "*.wav");
-    if (!fc.browseForFileToSave (true)) return;
-    const bool ok = WavExporter::writeStereoWav (
-        fc.getResult(), lastX_, lastY_, sampleRate_,
-        (float)sldGainX_->getValue(),
-        (float)sldGainY_->getValue(), 10.0);
-    lblStatus_.setText (ok ? "WAV exported" : "Export failed",
-                         juce::dontSendNotification);
+    if (lastX_.empty())
+        return;
+
+    fileChooser_ = std::make_unique<juce::FileChooser>(
+        "Export WAV",
+        juce::File::getSpecialLocation(
+            juce::File::userDesktopDirectory)
+            .getChildFile("oscilloscope_xy.wav"),
+        "*.wav");
+
+    auto flags =
+        juce::FileBrowserComponent::saveMode |
+        juce::FileBrowserComponent::canSelectFiles |
+        juce::FileBrowserComponent::warnAboutOverwriting;
+
+    fileChooser_->launchAsync(flags,
+        [this](const juce::FileChooser& chooser)
+    {
+        auto file = chooser.getResult();
+
+        if (file == juce::File{})
+            return;
+
+        const bool ok =
+            WavExporter::writeStereoWav(
+                file,
+                lastX_,
+                lastY_,
+                sampleRate_,
+                (float)sldGainX_->getValue(),
+                (float)sldGainY_->getValue(),
+                10.0);
+
+        lblStatus_.setText(
+            ok ? "WAV exported"
+               : "Export failed",
+            juce::dontSendNotification);
+    });
 }
 
 // ─────────────────────────────────────────────────────────────
